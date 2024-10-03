@@ -11,11 +11,11 @@ async function estatisticasDitto() {
 
     const data = [
         {
-            x: nomesEstatisticas,
-            y: estatisticas,
-            type: 'bar',
+            x: nomesEstatisticas, 
+            y: estatisticas, 
+            type: 'bar', 
             marker: {
-                color: getCSS('--primary-color')
+                color: getCSS('--primary-color') 
             }
         }
     ];
@@ -53,8 +53,8 @@ async function estatisticasDitto() {
     };
 
     const grafico = document.createElement('div');
-    grafico.className = 'grafico';
-    document.getElementById('graficos-container').appendChild(grafico);
+    grafico.className = 'grafico'; 
+    document.getElementById('graficos-container').appendChild(grafico); 
     Plotly.newPlot(grafico, data, layout);
 }
 
