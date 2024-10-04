@@ -1,15 +1,29 @@
 import { getCSS, tickConfig } from "./common.js";
 
-const url = 'https://api.spacexdata.com/v4/launches';
+const launchesUrl = 'https://api.spacexdata.com/v4/launches';
+const rocketsUrl = 'https://api.spacexdata.com/v4/rockets';
+
+async function pegarNomeFoguetes() {
+    const res = await fetch(rocketsUrl);
+    const dados = await res.json();
+    
+    const foguetes = {};
+    dados.forEach(foguete => {
+        foguetes[foguete.id] = foguete.name;
+    });
+    
+    return foguetes;
+}
 
 async function estatisticasSpaceX() {
-    const res = await fetch(url);
+    const res = await fetch(launchesUrl);
     const dados = await res.json();
 
-    // Vamos contar quantos lançamentos cada foguete teve
+    const foguetesNomes = await pegarNomeFoguetes();
+
     const foguetesContagem = {};
     dados.forEach(launch => {
-        const foguete = launch.rocket;
+        const foguete = foguetesNomes[launch.rocket]; 
         foguetesContagem[foguete] = (foguetesContagem[foguete] || 0) + 1;
     });
 
