@@ -1,21 +1,28 @@
 import { getCSS, tickConfig } from "./common.js";
 
-const url = 'https://pokeapi.co/api/v2/pokemon/ditto';
+const url = 'https://api.spacexdata.com/v4/launches';
 
-async function estatisticasDitto() {
+async function estatisticasSpaceX() {
     const res = await fetch(url);
     const dados = await res.json();
 
-    const estatisticas = dados.stats.map(stat => stat.base_stat);
-    const nomesEstatisticas = dados.stats.map(stat => stat.stat.name);
+    // Vamos contar quantos lançamentos cada foguete teve
+    const foguetesContagem = {};
+    dados.forEach(launch => {
+        const foguete = launch.rocket;
+        foguetesContagem[foguete] = (foguetesContagem[foguete] || 0) + 1;
+    });
+
+    const nomeFoguetes = Object.keys(foguetesContagem);
+    const quantidadeLançamentos = Object.values(foguetesContagem);
 
     const data = [
         {
-            x: nomesEstatisticas, 
-            y: estatisticas, 
-            type: 'bar', 
+            x: nomeFoguetes, 
+            y: quantidadeLançamentos, 
+            type: 'bar',
             marker: {
-                color: getCSS('--primary-color') 
+                color: getCSS('--primary-color')
             }
         }
     ];
@@ -24,7 +31,7 @@ async function estatisticasDitto() {
         plot_bgcolor: getCSS('--bg-color'),
         paper_bgcolor: getCSS('--bg-color'),
         title: {
-            text: 'Estatísticas do Pokémon Ditto',
+            text: 'Lançamentos por Tipo de Foguete',
             x: 0,
             font: {
                 color: getCSS('--primary-color'),
@@ -35,7 +42,7 @@ async function estatisticasDitto() {
         xaxis: {
             tickfont: tickConfig,
             title: {
-                text: 'Estatísticas',
+                text: 'Foguetes',
                 font: {
                     color: getCSS('--secondary-color')
                 }
@@ -44,7 +51,7 @@ async function estatisticasDitto() {
         yaxis: {
             tickfont: tickConfig,
             title: {
-                text: 'Valor Base',
+                text: 'Número de Lançamentos',
                 font: {
                     color: getCSS('--secondary-color')
                 }
@@ -55,7 +62,7 @@ async function estatisticasDitto() {
     const grafico = document.createElement('div');
     grafico.className = 'grafico'; 
     document.getElementById('graficos-container').appendChild(grafico); 
-    Plotly.newPlot(grafico, data, layout);
+    Plotly.newPlot(grafico, data, layout); 
 }
 
-estatisticasDitto();
+estatisticasSpaceX();
